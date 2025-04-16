@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id           String   @id @default(cuid())
+  place_id     String?  @unique // Outscraper's unique ID for the place, make unique to prevent duplicates
+  name         String?
+  full_address String?
+  phone        String?
+  site         String?
+  type         String? // Added field for business type
+  emailsJson   String? // Store emails array as a JSON string
+  socialsJson  String? // Added field for socials as a JSON string
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([name]) // Add index for potential sorting/filtering by name
+  @@index([type]) // Add index for type as well
+}
